@@ -14,13 +14,15 @@ int main(){
 	printf("$ ");
 	while(1){
 		cli();
-		ch=ql_delete();
+		ch=qi_delete();
 		sei();
 		if(ch){
 			if(ch=='\r')continue;
 			if(ch=='\n'){
 				cmd[n]=0;
-				if(!strcmp(cmd,"app")) app_prime(2000);
+				if(!strcmp(cmd,"app")) {app_prime(2000);
+				}else if(!strcmp(cmd,"hi")) {printf("hi my name is kimunseong\n");
+				}
 				else 	printf("Unknon command..\n");
 				n=0;
 				printf("$ ");

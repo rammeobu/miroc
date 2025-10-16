@@ -7,12 +7,12 @@
 #include "Circular_Queue.h"
 #include "uart.h"
 #define EOT 0x04
-FILE Mystdout = FDEV_SETUP_STREAM(uart_putchar_6,NULL,_FDEV_SETUP_WRITE);
+FILE Mystdout = FDEV_SETUP_STREAM(uart_putchar,NULL,_FDEV_SETUP_WRITE);
 char uart_busy;
 void uart_init(void){
 	stdout=&Mystdout;
+	qi_init();
 	uart_busy=0;
-	q_init();
 	UBRR0H=0x00;UBRR0L=0x07;
 	sbi(UCSR0A,U2X0);
 	sbi(UCSR0B,TXEN0);
@@ -23,15 +23,14 @@ void uart_init(void){
 char buf[64];
 volatile int bufi;
 volatile int txend=1;
-int uart_putchar_6(char ch, FILE * stream){
-	if (ch=='\n'){
-		uart_putchar_6('\r',stream);
-		cli();
-		if(!uart_busy){
-			UDR0=ch;
-			uart_busy=1;
-		}
-	}else{
+int uart_putchar(char ch, FILE * stream){
+	if (ch=='\n')uart_putchar('\r',stream);
+	cli();
+	if(!uart_busy){
+		UDR0=ch;
+		uart_busy=1;
+	}
+	else{
 		while(qo_insert(ch)==0){
 			sei();
 			_delay_us(100);
@@ -59,17 +58,6 @@ void app_prime(int t){
 	}
 	printf("count=%d\n",count);
 }
-int uart_getchar(FILE *stream){
-	char ch;
-	do{
-		cli();
-		ch=ql_delete();
-		sei();
-
-	}while (ch==0);
-	if(ch == EOF) return (-1);
-	else return(ch);
-}
 
 ISR(USART0_TX_vect){
 	char ch ;
@@ -82,6 +70,6 @@ ISR(USART0_TX_vect){
 ISR(USART0_RX_vect){
 	char ch;
 	ch=UDR0;
-	ql_insert(ch);	
+	qi_insert(ch);	
 }
  

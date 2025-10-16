@@ -6,28 +6,10 @@ char qi[QI_SIZE],qo[QO_SIZE];
 char q[Q_SIZE];
 int f,r;
 int fi,ri,fo,ro;
-void q_init(){
-	fi=ri=fo=ro=0;
-}
 void qi_init(){
 	fi=ri=fo=ro=0;
 }
-int q_insert(char ch){
-	if((r+1)%Q_SIZE==f){
-		return(0);
-	}
-	r=(r+1)%Q_SIZE;
-	q[r]=ch;
-	return(1);
-	
-}
-int q_delete(){
-	if(r==f)
-		return 0;
-	f=(f+1)%Q_SIZE;
-	return(q[f]);
-}
-int ql_insert(char ch){
+int qi_insert(char ch){
 	if((ri+1)%QI_SIZE==fi){
 		return(0);
 	}
@@ -45,7 +27,7 @@ int qo_insert(char ch){
 	return(1);
 	
 }
-int ql_delete(){
+int qi_delete(){
 	if(ri==fi)
 		return 0;
 	fi=(fi+1)%QI_SIZE;
