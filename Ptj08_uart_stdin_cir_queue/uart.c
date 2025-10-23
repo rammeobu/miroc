@@ -46,12 +46,13 @@ int uart_getchar(FILE * stream){
 		ch=qi_delete();
 		sei();
 	}while (ch==0);
-	if (ch==EOF)return (1);
+
+	if (ch==EOT)return (-1);
 	else return (ch);
 }
 
 void uart_echo(char ch){
-	if(ch=='\n')uart_echo('\n');
+	if(ch=='\n')uart_echo('\r');
 	if(!uart_busy){
 		UDR0=ch;
 		uart_busy=1;
@@ -70,7 +71,7 @@ ISR(USART0_TX_vect){
 ISR(USART0_RX_vect){
 	char ch;
 	ch=UDR0;
-	if(ch!=EOF){
+	if(ch!=EOT){
 		if(ch=='\n')ch='\n';
 		uart_echo(ch);
 	}	

@@ -8,31 +8,17 @@
 #include "Circular_Queue.h"
 #include "prime.h"
 int main(){
-	char cmd[128],ch;
-	int n=0;
+	char cmd[128],*cp;
 	uart_init();
 	sei();
-	printf("$ ");
 	while(1){
-		cli();
-		ch=qi_delete();
-		sei();
-		if(ch){
-			if(ch=='\r')continue;
-			if(ch=='\n'){
-				cmd[n]=0;
-				if(!strcmp(cmd,"app")) {app_prime(2000);
-				}else if(!strcmp(cmd,"hi")) {printf("hi my name is kimunseong\n");
-				}
-				else 	printf("Unknon command..\n");
-				n=0;
-				printf("$ ");
-			}else{
-				cmd[n++]=ch;
-			}
-
-		}
+		printf("$");
+		if(fgets(cmd, sizeof(cmd),stdin)==NULL)
+			break;
+		if((cp=strtok(cmd,"\n\r\t "))==NULL) continue;
+		if(!strcmp(cmd, "prime")) app_prime(2000);
+		else printf("Unknwon command...\n");
 	}
-	
-	return 0;
+	printf("logout, good bye !!!\n");
+	while(1); return 0;
 }
