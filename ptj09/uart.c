@@ -77,7 +77,7 @@ ISR(USART0_RX_vect){
 	char ch;
 	ch=UDR0;
 	if(ch!=EOT){
-		if(ch=='\n')ch='\n';
+		if(ch=='\r')ch='\n';
 		uart_echo(ch);
 	}	
 	qi_insert(ch);
